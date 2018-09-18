@@ -50,7 +50,9 @@ Json.prototype.deserialize = function (str) {
 Json.prototype.bulkBody = function (val) {
   var body = '', i;
 
-  if (_.isArray(val)) {
+  if(Buffer.isBuffer(val)) {
+    return val;
+  } else if (_.isArray(val)) {
     for (i = 0; i < val.length; i++) {
       body += this.serialize(val[i]) + '\n';
     }
@@ -58,7 +60,7 @@ Json.prototype.bulkBody = function (val) {
     // make sure the string ends in a new line
     body = val + (val[val.length - 1] === '\n' ? '' : '\n');
   } else {
-    throw new TypeError('Bulk body should either be an Array of commands/string, or a String');
+    throw new TypeError('Bulk body should either be an Array of commands/string, or a String, or a Buffer');
   }
 
   return body;
